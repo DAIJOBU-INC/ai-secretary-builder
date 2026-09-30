@@ -181,7 +181,6 @@
   .demo .msg .who{display:block;font-size:10px;font-weight:700;opacity:.7;margin-bottom:2px;}
   .row .num{flex:0 0 auto;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:var(--blue);color:#fff;font-size:12px;margin-top:1px;}
   .row .ask{font-size:11.5px;color:var(--blue2);margin-top:2px;line-height:1.6;}
-  .row .tag.try{background:var(--yellow);color:var(--deep);}
   .pack-scene{display:inline-block;min-width:3.4em;text-align:center;font-size:10.5px;font-weight:800;color:#fff;background:var(--blue2);padding:0 6px;margin-right:7px;vertical-align:1px;}
   .packbox{border:3px solid var(--blue);box-shadow:4px 4px 0 var(--blue);background:#fbfdff;margin:0 0 10px;}
   .packbox summary{cursor:pointer;list-style:none;padding:10px 12px;font-size:13px;font-weight:800;color:var(--blue2);display:flex;align-items:center;gap:8px;}
@@ -623,17 +622,20 @@ function renderStep2(){
   tries.forEach((s,i)=>{const p=packSkill(s.id);
     h+='<div class="row fixed"><span class="num pixel">'+(i+1)+'</span><div class="meta"><span class="id">/'+s.id+'</span><div class="desc">'+esc(s.desc)+'</div>'+
       (p?'<div class="ask">こう頼む：'+esc(p.ask)+'</div>':'')+'</div></div>';});
-  h+='<div class="group-title">AI秘書スキルパック（全部まとめて入ります）</div>';
   if(PACK){
-    h+='<details class="packbox"'+(packOpen?' open':'')+'><summary>📦 v'+esc(PACK.version)+'：スキル'+PACK.skills.length+'本＋'+esc(PACK.agents.map(a=>a.label).join('・'))+'</summary><div class="pack-list">';
-    PACK.skills.forEach(s=>{h+='<div class="row fixed"><div class="meta"><span class="id"><span class="pack-scene">'+esc(s.scene)+'</span>/'+esc(s.name)+
-      (tryIds.has(s.name)?'<span class="tag try">まず試す</span>':'')+'</span><div class="desc">'+esc(s.what)+'</div><div class="ask">こう頼む：'+esc(s.ask)+'</div></div></div>';});
+    // 「まず試す」に出したスキルは一覧で繰り返さない（同じ説明と頼み方が2回並ぶのを避ける）
+    const rest=PACK.skills.filter(s=>!tryIds.has(s.name));
+    const agentNames=PACK.agents.map(a=>{const m=a.label.match(/（(.+)）/);return m?m[1]:a.name;}).join('・');
+    h+='<div class="group-title">AI秘書スキルパック v'+esc(PACK.version)+'（スキル'+PACK.skills.length+'本＋'+esc(agentNames)+'・全部まとめて入ります）</div>';
+    h+='<details class="packbox"'+(packOpen?' open':'')+'><summary>📦 上の'+(PACK.skills.length-rest.length)+'本のほかに入っている'+rest.length+'本と'+esc(agentNames)+'</summary><div class="pack-list">';
+    rest.forEach(s=>{h+='<div class="row fixed"><div class="meta"><span class="id"><span class="pack-scene">'+esc(s.scene)+'</span>/'+esc(s.name)+'</span>'+
+      '<div class="desc">'+esc(s.what)+'</div><div class="ask">こう頼む：'+esc(s.ask)+'</div></div></div>';});
     PACK.agents.forEach(a=>{h+='<div class="row fixed"><div class="meta"><span class="id"><span class="pack-scene">調査</span>'+esc(a.label)+'</span><div class="desc">'+esc(a.what)+'</div></div></div>';});
     h+='</div></details>';
-  }else if(PACK_ERR){
-    h+='<p class="hint">スキルパックの一覧を読み込めませんでした。公開URLから開いているか確かめて、ページを再読み込みしてください。</p>';
   }else{
-    h+='<p class="hint">スキルパックの一覧を読み込み中…</p>';
+    h+='<div class="group-title">AI秘書スキルパック（全部まとめて入ります）</div>';
+    h+=PACK_ERR?'<p class="hint">スキルパックの一覧を読み込めませんでした。公開URLから開いているか確かめて、ページを再読み込みしてください。</p>'
+      :'<p class="hint">スキルパックの一覧を読み込み中…</p>';
   }
   if(state.roles.size){
     const own=mergedOwn();
