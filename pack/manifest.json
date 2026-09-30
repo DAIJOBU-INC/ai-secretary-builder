@@ -1,0 +1,135 @@
+{
+  "name": "ai-secretary",
+  "version": "0.2.0",
+  "source": "DAIJOBU-INC/ai-secretary-skills@9382d35",
+  "skills": [
+    {
+      "scene": "朝",
+      "name": "daily-schedule",
+      "what": "今日（または明日）の予定・タスク・前日の持ち越しから、15分刻みの工程表を作る。準備資料が無い会議も教えてくれる",
+      "ask": "「今日の工程表をつくって」"
+    },
+    {
+      "scene": "受信箱",
+      "name": "inbox-triage",
+      "what": "メールとチャットで、自分宛てにまだ返していないものを洗い出し、優先度をつけて一覧にする",
+      "ask": "「返信漏れてない？」"
+    },
+    {
+      "scene": "受信箱",
+      "name": "reply-draft",
+      "what": "受信メールへの返信を下書きする。チャットの返信文も作れる。日程調整は予定の空きから候補を出す（送信・投稿はしない）",
+      "ask": "「このメールの返信を下書きして」"
+    },
+    {
+      "scene": "会議",
+      "name": "mtg-prep",
+      "what": "会議の前に、予定・過去の議事録・メール・チャット・手元のメモを集めて準備資料を作る。相手に見せてよい部分と社内メモの2部構成。1on1 の準備にも対応",
+      "ask": "「明日のA社との打ち合わせの準備資料をつくって」"
+    },
+    {
+      "scene": "会議",
+      "name": "meeting-notes",
+      "what": "議事録を Slack／Teams／メールにそのまま貼れる文面にする（送信はしない）",
+      "ask": "「さっきの打ち合わせの議事録を出して」"
+    },
+    {
+      "scene": "会議",
+      "name": "1on1-writeback",
+      "what": "1on1 の記録をメンバーごとのファイルに書き戻し、次の1on1につなげる",
+      "ask": "「今日のAさんとの1on1を記録して」"
+    },
+    {
+      "scene": "考える",
+      "name": "kabeuchi",
+      "what": "仮説や迷いをぶつけると、反論・見落とし・第3の道を出して、最後に判断を3行でまとめる。決めたことは判断の記録に残せる",
+      "ask": "「この方針で壁打ちしたい」"
+    },
+    {
+      "scene": "調べる",
+      "name": "company-research",
+      "what": "取引先・商談相手・提携先を調べて、会社ごとのカルテを作る・更新する",
+      "ask": "「A社のカルテをつくって」"
+    },
+    {
+      "scene": "調べる",
+      "name": "reading",
+      "what": "本の要点をつかみ、自分の仕事への実践ガイドにする。読んだ後の振り返りも",
+      "ask": "「この本をまとめて」"
+    },
+    {
+      "scene": "調べる",
+      "name": "clip",
+      "what": "気になった記事・URLを要約して、タグ付きで保存する",
+      "ask": "「これをクリップして」"
+    },
+    {
+      "scene": "発信",
+      "name": "write-article",
+      "what": "自分の文体で、記事・発信文の下書きを書く（投稿は自分で）",
+      "ask": "「このテーマで note の記事を書いて」"
+    },
+    {
+      "scene": "発信",
+      "name": "eli5",
+      "what": "むずかしい仕組みを、大きな絵と少ない言葉の「しくみ絵本」で説明する",
+      "ask": "「◯◯を絵本で説明して」"
+    },
+    {
+      "scene": "夜",
+      "name": "daily-log",
+      "what": "1日の終わりに、やったこと・進行中・明日への持ち越しを日報にまとめる",
+      "ask": "「今日の日報をまとめて」"
+    },
+    {
+      "scene": "週末",
+      "name": "weekly-report",
+      "what": "その週の日報を束ねて、成果・進捗・課題・判断したこと・来週の注力を週次レポートにする。追っている数字があれば前週と並べる",
+      "ask": "「今週の振り返りをつくって」"
+    },
+    {
+      "scene": "片付け",
+      "name": "downloads-triage",
+      "what": "ダウンロードフォルダを週1回仕分ける（消さずに移動。動かす前に確認）",
+      "ask": "「ダウンロードを整理して」"
+    }
+  ],
+  "agents": [
+    {
+      "name": "researcher",
+      "label": "researcher（調査係）",
+      "what": "手元のファイル・Web・つながっている道具を横断して調べ、要点と出典だけを返す。調べものを別の係に任せるので、会話が長くなっても散らかりにくい。道具は読むだけで、送信・投稿・予定の作成はしない"
+    }
+  ],
+  "files": [
+    "agents/researcher.md",
+    "skills/1on1-writeback/SKILL.md",
+    "skills/1on1-writeback/references/member-file-template.md",
+    "skills/clip/SKILL.md",
+    "skills/company-research/SKILL.md",
+    "skills/company-research/references/profile-template.md",
+    "skills/daily-log/SKILL.md",
+    "skills/daily-schedule/SKILL.md",
+    "skills/downloads-triage/SKILL.md",
+    "skills/eli5/SKILL.md",
+    "skills/eli5/references/ehon-style.md",
+    "skills/inbox-triage/SKILL.md",
+    "skills/kabeuchi/SKILL.md",
+    "skills/meeting-notes/SKILL.md",
+    "skills/mtg-prep/SKILL.md",
+    "skills/mtg-prep/references/1on1-flow.md",
+    "skills/mtg-prep/references/1on1-principles.md",
+    "skills/mtg-prep/references/1on1-questions.md",
+    "skills/mtg-prep/references/meeting-formats.md",
+    "skills/reading/SKILL.md",
+    "skills/reading/references/output-format.md",
+    "skills/reading/references/review-format.md",
+    "skills/reply-draft/SKILL.md",
+    "skills/reply-draft/references/reply-templates.md",
+    "skills/weekly-report/SKILL.md",
+    "skills/write-article/SKILL.md",
+    "skills/write-article/references/review-checklist.md",
+    "skills/write-article/references/style-guide-template.md",
+    "skills/write-article/references/writing-rules.md"
+  ]
+}

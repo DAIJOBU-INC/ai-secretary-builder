@@ -35,13 +35,13 @@
 
 ### 6. スラッシュコマンド（スキル）が出てこない
 - **症状**: `/daily-schedule` 等を打っても認識されない。
-- **原因**: ファイルが `.claude/commands/` に無い／ファイル名とコマンド名が不一致／再起動前。
-- **対処**: `.claude/commands/{名前}.md` があるか・frontmatter（model/description）が壊れていないか確認 → Claude Code 再起動。
+- **原因**: スキルのファイルが置き場に無い（スキルパックは `.claude/skills/{名前}/SKILL.md`、1ファイルのコマンドは `.claude/commands/{名前}.md`）／フォルダ名・ファイル名とスキル名が不一致／同じ名前のスキルとコマンドが両方ある／再起動前。
+- **対処**: 置き場にファイルがあるか・frontmatter（name/description）が壊れていないか確認 → 同じ名前が2つあれば古い方を `.claude/_archive/` へ移す（第2部 Step 6-1）→ Claude Code 再起動。プラグインで入れた場合は `/ai-secretary:daily-schedule` のように名前を指定して呼び、`/plugin` の画面で有効になっているか確認する。
 
 ### 7.「おはよう」で工程表が出ない
 - **症状**: トリガーワードを打っても `/daily-schedule` が動かない。
-- **原因**: カレンダー未接続／CLAUDE.md の「ワークフロー定義」にトリガーが書かれていない。
-- **対処**: カレンダー接続を確認（詰まり#1）→ CLAUDE.md に「『おはよう』→ `/daily-schedule`」を記載 → スキル本体が存在するか確認（詰まり#6）。
+- **原因**: カレンダー未接続／CLAUDE.md の「ワークフロー定義」にトリガーが書かれていない（スキルパックの `/daily-schedule` は「今日の工程表をつくって」のような言葉で動く作りで、「おはよう」だけでは動かないことがある）。
+- **対処**: カレンダー接続を確認（詰まり#1）→ CLAUDE.md に「『おはよう』→ `/daily-schedule`」を記載（プラグインで入れた場合は `/ai-secretary:daily-schedule`）→ スキル本体が存在するか確認（詰まり#6）。
 
 ### 8. 会社資料（PDF/Office）が読み込めない
 - **症状**: `context/company/sources/` に置いた資料の中身を AI が拾えない。

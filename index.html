@@ -179,6 +179,22 @@
   .demo .msg.u{align-self:flex-end;background:var(--blue);color:#fff;}
   .demo .msg.a{align-self:flex-start;background:#fff;color:var(--ink);}
   .demo .msg .who{display:block;font-size:10px;font-weight:700;opacity:.7;margin-bottom:2px;}
+  .row .num{flex:0 0 auto;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:var(--blue);color:#fff;font-size:12px;margin-top:1px;}
+  .row .ask{font-size:11.5px;color:var(--blue2);margin-top:2px;line-height:1.6;}
+  .row .tag.try{background:var(--yellow);color:var(--deep);}
+  .pack-scene{display:inline-block;min-width:3.4em;text-align:center;font-size:10.5px;font-weight:800;color:#fff;background:var(--blue2);padding:0 6px;margin-right:7px;vertical-align:1px;}
+  .packbox{border:3px solid var(--blue);box-shadow:4px 4px 0 var(--blue);background:#fbfdff;margin:0 0 10px;}
+  .packbox summary{cursor:pointer;list-style:none;padding:10px 12px;font-size:13px;font-weight:800;color:var(--blue2);display:flex;align-items:center;gap:8px;}
+  .packbox summary::-webkit-details-marker{display:none;}
+  .packbox summary::before{content:'▶';font-size:10px;color:var(--blue);transition:transform .15s;flex:none;}
+  .packbox summary::after{content:'中身を見る';margin-left:auto;font-size:11px;color:#fff;background:var(--blue);padding:2px 8px;border:2px solid var(--dark);flex:none;}
+  .packbox[open] summary{border-bottom:3px dotted var(--blue);}
+  .packbox[open] summary::before{transform:rotate(90deg);}
+  .packbox[open] summary::after{content:'とじる';background:var(--ink);}
+  .packbox .pack-list{padding:10px 10px 2px;}
+  .askbox{margin-top:12px;background:#eefaf1;border:3px solid var(--green);box-shadow:4px 4px 0 var(--green);padding:10px 12px;font-size:12.5px;font-weight:700;color:#1f7a44;}
+  .askbox .askq{display:block;margin:6px 0 9px;padding:8px 10px;background:#fff;border:2px dashed var(--green);font-weight:700;color:var(--deep);word-break:break-all;}
+  .askbox button{font-size:12px;padding:6px 11px;border-width:2px;box-shadow:2px 2px 0 var(--dark);}
   .role-card:focus-visible,.steps .s:focus-visible,.mute:focus-visible,.gbtn:focus-visible{outline:3px solid var(--coral);outline-offset:2px;}
   @media (max-width:520px){
     body{padding:16px 12px 60px;}
@@ -274,7 +290,7 @@
       <div class="msg u"><span class="who">あなた</span>おはよう</div>
       <div class="msg a"><span class="who">AI秘書</span>おはようございます。今日の工程表です。<br>9:00 メール確認 ／ 9:30 A社の商談準備（前回メモ・資料をまとめておきました）／ 11:00 A社 商談 ／ 13:00 見積ドラフト ／ 15:00 1on1の準備。まず 9:30 の商談準備から始めましょう。</div>
       <div class="msg u"><span class="who">あなた</span>A社へのお礼メール下書いて</div>
-      <div class="msg a"><span class="who">AI秘書</span>下書きを用意しました（送信はせず、確認をお願いします）。meeting-emailスキルの手順に基づき、決められた手順とフォーマットで作成しました。</div>
+      <div class="msg a"><span class="who">AI秘書</span>下書きを用意しました（送信はせず、確認をお願いします）。reply-draftスキルの手順に基づき、決められた手順とフォーマットで作成しました。</div>
     </div>
   </details>
 
@@ -307,7 +323,7 @@
     <input type="text" id="ainame" placeholder="AI秘書につけたい名前（任意・例：みにふぇね）">
     <label class="field">▶ あなたの役割（複数えらべます。兼任もOK）</label>
     <div class="roles" id="roleCards"></div>
-    <p class="pickhint">例：経営者が営業も採用も兼ねる → 複数選ぶと鉄板スキルと役割チームがぜんぶ入ります。当てはまらなければ「その他」に自由入力でOK。</p>
+    <p class="pickhint">例：経営者が営業も採用も兼ねる → 複数選ぶと、それぞれのおすすめスキルと役割チームがぜんぶ入ります。当てはまらなければ「その他」に自由入力でOK。</p>
     <div class="freebox" id="roleOtherBox" style="display:none"><input type="text" id="roleOther" placeholder="あなたの役割を書いてください（例：税理士／カスタマーサクセス／製造現場／デザイナー）"></div>
     <div class="group-title">▶ 繋ぐツール（使うものにチェック・あとから足せます）</div>
     <div id="toolList"></div>
@@ -324,18 +340,19 @@
 
   <section class="panel pbox" data-p="2">
     <h2>② 能力（第2部）— スキル＆エージェント</h2>
-    <p class="lead">全員の土台 ＋ 選んだ役割の鉄板。作るものを選んで、その場でじっそう。</p>
+    <p class="lead">AI秘書スキルパック（スキル<span data-pack="count">15</span>本＋調査係）をまるごと入れて、役割のおすすめから試す。パックに無い仕事は自作で足す。</p>
     <div class="outcome">
       <div class="oh">このステージで作られるもの</div>
       <ul>
-        <li>よく使う業務の<b>スキル</b>（/daily-schedule などのスラッシュコマンド）</li>
+        <li><b>AI秘書スキルパック</b>のスキル<span data-pack="count">15</span>本（工程表・返信の下書き・会議の準備・議事録・日報 など）と<b>調査係</b>エージェント</li>
+        <li>役割に合わせた「まず試す」順番と、パックに無い仕事の<b>自作スキル</b></li>
         <li>選んだ役割の<b>Agent Team</b>（複数AIが分担する作業チーム）</li>
       </ul>
-      <div class="can">できること：繰り返し作業がコマンド一発に。重い調査・制作をチームに任せられる</div>
+      <div class="can">できること：「今日の工程表をつくって」「返信漏れてない？」とひとこと頼むだけで動く。重い調べものは調査係やチームに任せられる</div>
     </div>
     <div id="step2body"></div>
     <div class="implement">
-      <button class="primary big" onclick="impl(2)">▶ ② 能力をじっそう（第2部プロンプト生成）</button>
+      <button class="primary big" onclick="impl(2)">▶ ② 能力をじっそう（第2部セット生成）</button>
       <div class="out" id="out2"></div>
     </div>
     <div class="nav"><button onclick="go(1)">◀ もどる</button><button onclick="go(3)">③ 中身へ ▶</button></div>
@@ -413,54 +430,58 @@ const SPRITES={
 };
 
 /* ===== data ===== */
+/* 第2部: スキルの本体は AI秘書スキルパック（pack/ に同梱・pack/manifest.json が目録）。
+   ここでは「まず試す順番（picks）」と「パックに無い自作スキル（own）」だけを役割ごとに持つ。
+   正本は構築指示書の companion/role-contexts/ の §3。役割やスキル名を変えたら両方直す。
+   UNIVERSAL と picks の id がパックに実在するかは sync-pack.sh が確かめる（無ければ同期を止める）。 */
 const UNIVERSAL=[
-  {id:"/daily-schedule",desc:"朝の工程表（15分刻み）"},
-  {id:"/mtg-prep",desc:"会議の事前準備資料（共有用＋社内メモの2部構成）"}
+  {id:"daily-schedule",desc:"朝の工程表（15分刻み）"},
+  {id:"mtg-prep",desc:"会議の準備資料（共有用＋社内メモの2部構成）"}
 ];
 const ROLES={
   keiei:{name:"経営",
-    tetsuban:[{id:"/sparring",desc:"経営判断・戦略の壁打ち（反論・別視点を出させる）"},{id:"/weekly-report",desc:"今週の成果・進捗・課題を定点観測"}],
-    next:[{id:"/clip",desc:"投資・業界情報の取り込み"},{id:"/company-research",desc:"投資・提携先の企業カルテ"}],
+    picks:[{id:"kabeuchi",desc:"経営判断・戦略の壁打ち（反論・見落とし・第3の道を出させ、判断を記録）"},{id:"weekly-report",desc:"今週の成果・進捗・課題・判断の定点観測"}],
+    own:[{id:"/interview",desc:"新施策の着手前ヒアリング→spec（要件をまとめたメモ）"}],
     team:{name:"戦略分析チーム",flow:"問いの設計→市場調査→定量分析→戦略設計→批判的レビュー"},
     docs:[{id:"事業計画・中期計画",on:true},{id:"取締役会・経営会議の資料/議事録",on:true},{id:"月次業績サマリ（PL・KPI）",on:false},{id:"会社案内・HP",on:true}]},
   eigyo:{name:"営業",
-    tetsuban:[{id:"/meeting-email",desc:"商談の事前/事後メール下書き（送信は本人許可後）"},{id:"/company-research",desc:"新規リード・初回商談の企業カルテ"}],
-    next:[{id:"商談FB・ナーチャ系",desc:"自社CRM・案件管理に合わせて"},{id:"/clip",desc:"業界・競合情報の取り込み"}],
+    picks:[{id:"reply-draft",desc:"商談の事前リマインド／事後フォロー・日程調整のメール下書き（送信は本人）"},{id:"company-research",desc:"新規リード・初回商談の企業カルテ"}],
+    own:[{id:"商談フィードバック・ナーチャリング系",desc:"商談議事録の分析・見込み客へのフォロー漏れ通知（自社CRM・案件管理に合わせて）"}],
     team:{name:"提案書作成チーム",flow:"顧客リサーチ→競合分析→ソリューション設計→コピーライター→レビュアー"},
     docs:[{id:"標準提案デック・サービス資料",on:true},{id:"価格表・見積テンプレ",on:true},{id:"既存顧客リスト",on:true},{id:"商談議事録",on:false}]},
   marke:{name:"マーケ",
-    tetsuban:[{id:"/clip",desc:"競合・トレンド・ネタの取り込み"},{id:"/company-research",desc:"ターゲット・競合の調査カルテ"}],
-    next:[{id:"コンテンツ下書き系",desc:"記事・LP・SNSを自社トンマナで"},{id:"SNS運用系",desc:"投稿カレンダー・下書き"}],
+    picks:[{id:"clip",desc:"競合・トレンド・ネタの取り込み"},{id:"company-research",desc:"競合・提携候補など気になる会社のカルテ"}],
+    own:[{id:"LP・広告コピーの下書き系",desc:"LP・広告の下書きを自社トンマナで（記事はパックの write-article で）"},{id:"SNS運用系",desc:"投稿カレンダー・各媒体の下書き"}],
     team:{name:"コンテンツ制作チーム",flow:"リサーチ→構成設計→執筆→SEO/校正→レビュー"},
     docs:[{id:"ブランド・トンマナガイド",on:true},{id:"過去の記事・LP・投稿",on:true},{id:"ターゲット/ペルソナ定義",on:true},{id:"競合・キーワードリスト",on:false}]},
   cs:{name:"CS・サポート",
-    tetsuban:[{id:"/meeting-email",desc:"問い合わせ・お詫び・案内メールの下書き"},{id:"/clip",desc:"FAQ・既知不具合・製品情報の蓄積"}],
-    next:[{id:"FAQ回答ドラフト系",desc:"context/product/ を前提に回答下書き"},{id:"議事録要約系",desc:"オンボーディング/定例の記録"}],
+    picks:[{id:"reply-draft",desc:"問い合わせメールへの回答・お詫び・案内の返信を下書き（送信は本人）"},{id:"clip",desc:"FAQ・既知不具合・製品情報の蓄積"}],
+    own:[{id:"FAQ回答ドラフト系",desc:"context/product/ を前提に一次回答を下書き"}],
     team:{name:"問い合わせ対応チーム",flow:"一次受け→分類→回答ドラフト→エスカレ判断→レビュー"},
     docs:[{id:"製品仕様・操作マニュアル",on:true},{id:"FAQ・過去の問い合わせ",on:true},{id:"返信テンプレ集",on:true},{id:"SLA・エスカレ基準",on:false}]},
   jinji:{name:"人事・採用",
-    tetsuban:[{id:"/interview",desc:"求人要件・評価軸を着手前に深掘りしspecへ"},{id:"/meeting-email",desc:"日程調整・オファー・お見送り連絡の下書き"}],
-    next:[{id:"1on1・面接系",desc:"context/candidates/ を前提にカスタマイズ"},{id:"評価・労務FAQ系",desc:"評価シート下書き・就業規則の参照回答"}],
+    picks:[{id:"reply-draft",desc:"候補者・社内からのメールへの返信、面接の日程調整・リマインドを下書き（送信は本人。条件・合否など未確定のことは書かない）"},{id:"1on1-writeback",desc:"メンバーとの1on1の記録をメンバーごとのファイルに書き戻す"}],
+    own:[{id:"/interview",desc:"求人要件・評価軸を着手前に深掘りし、spec（要件をまとめたメモ）へ",rec:true},{id:"評価・労務FAQ系",desc:"評価シート下書き・就業規則の参照回答"}],
     team:{name:"候補者評価チーム",flow:"求人要件設計→経歴スクリーニング→面接設計→評価サマリ→批判的レビュー"},
     docs:[{id:"求人票・募集要項",on:true},{id:"評価シート・面接基準",on:true},{id:"就業規則・人事制度",on:true},{id:"カルチャーデック",on:false}]},
   keiri:{name:"経理・財務",
-    tetsuban:[{id:"/daily-log",desc:"日次の処理・対応を記録（月次の土台）"},{id:"/clip",desc:"税制・会計基準・補助金の改正を蓄積"}],
-    next:[{id:"定型文書ドラフト系",desc:"請求・督促・稟議の文書作成"},{id:"月次まとめ系",desc:"予実・資金繰りの定点サマリ"}],
+    picks:[{id:"daily-log",desc:"日次の処理・対応を記録（月次の土台）"},{id:"clip",desc:"税制・会計基準・補助金の改正を蓄積"}],
+    own:[{id:"定型文書ドラフト系",desc:"請求・督促・稟議の文書作成"},{id:"月次まとめ系",desc:"予実・資金繰りの定点サマリ"}],
     team:{name:"月次まとめチーム",flow:"数値収集→分類→サマリ作成→整合チェック"},
     docs:[{id:"勘定科目表",on:true},{id:"請求書・契約書の定型フォーマット",on:true},{id:"取引先・支払先一覧",on:true},{id:"月次PL・予算",on:false}]},
   bo:{name:"総務・バックオフィス",
-    tetsuban:[{id:"/clip",desc:"法改正・制度変更・新ツールの記事を蓄積"},{id:"/slack-digest",desc:"社内問い合わせ・依頼のトリアージ"}],
-    next:[{id:"定型文書ドラフト系",desc:"規程・通知・契約ひな型で文書作成"},{id:"議事録要約系",desc:""}],
+    picks:[{id:"inbox-triage",desc:"社内の問い合わせ・依頼の未返信を洗い出し、対応漏れを防ぐ"},{id:"clip",desc:"法改正・制度変更・新ツールの記事を蓄積"}],
+    own:[{id:"定型文書ドラフト系",desc:"規程・通知・契約ひな型で文書作成"}],
     team:{name:"ナレッジ整備チーム",flow:"情報収集→分類整理→ドキュメント化→整合チェック"},
     docs:[{id:"社内規程・運用マニュアル",on:true},{id:"契約書の定型フォーマット",on:true},{id:"備品・資産台帳",on:false},{id:"取引先一覧",on:false}]},
   qa:{name:"開発・QA",
-    tetsuban:[{id:"/interview",desc:"仕様を実装着手前に深掘りしspecへ（手戻り削減）"},{id:"/clip",desc:"技術記事・脆弱性情報を蓄積"},{id:"/daily-log",desc:"コミット・PR・Issue活動を記録"}],
-    next:[{id:"テスト系スキル",desc:"仕様書→テスト観点→テストケース（観点マスタに沿う）"}],
+    picks:[{id:"clip",desc:"技術記事・脆弱性情報を蓄積"},{id:"daily-log",desc:"会議・作業ファイル・コミット履歴から日報をまとめる"}],
+    own:[{id:"/interview",desc:"仕様を実装着手前に深掘りし、spec（要件をまとめたメモ）へ（手戻り削減）",rec:true},{id:"テスト系スキル",desc:"仕様書→テスト観点→テストケース（観点マスタに沿う）"}],
     team:{name:"テスト設計チーム",flow:"仕様理解→テスト観点抽出→テストケース生成→レビュー"},
     docs:[{id:"対象リポジトリ",on:true},{id:"仕様書・要件定義",on:true},{id:"既存のテスト計画・観点表",on:true},{id:"過去のバグ・障害レポート",on:false}]},
   design:{name:"デザイナー",
-    tetsuban:[{id:"/clip",desc:"参考事例・UIトレンド・競合表現の取り込み"},{id:"/interview",desc:"制作依頼のゴール・要件・制約を着手前に深掘りしブリーフへ（手戻り削減）"}],
-    next:[{id:"ブリーフ/指示書ドラフト系",desc:"依頼・FBを指示書に落とす（造形は本人）"},{id:"デザインクリティック系",desc:"案の論点出し・批判レビュー"}],
+    picks:[{id:"clip",desc:"参考事例・UIトレンド・競合表現の取り込み"},{id:"kabeuchi",desc:"デザイン案の論点出し・批判レビュー（造形の判断は本人）"}],
+    own:[{id:"/interview",desc:"制作依頼のゴール・要件・制約を着手前に深掘りし、ブリーフ（制作指示書）にまとめる（手戻り削減）",rec:true},{id:"ブリーフ/指示書ドラフト系",desc:"依頼・FBを指示書に落とす（造形は本人）"}],
     team:{name:"デザイン検討チーム",flow:"参考リサーチ→要件整理→案の論点出し→批判レビュー→まとめ"},
     docs:[{id:"ブランド・デザインシステムガイド",on:true},{id:"アセット・素材の索引",on:true},{id:"過去の制作物・デザイン判断の記録",on:true},{id:"案件ブリーフ・依頼一覧",on:false}]}
 };
@@ -482,7 +503,7 @@ const PERMS=[
 ];
 
 const state={company:"",person:"",ainame:"",roles:new Set(),otherOn:false,otherText:"",tools:new Set(),toolsFree:[],perms:new Set(PERMS.filter(p=>p.on).map(p=>p.key)),
-  tetsuban:new Set(),next:new Set(),teams:new Set(),docs:new Set()};
+  own:new Set(),teams:new Set(),docs:new Set()};
 const implemented=new Set();
 const downloaded=new Set();
 function markDL(n){var t=document.querySelector('.steps .s[data-s="'+n+'"]');if(t)t.classList.add('dl');}
@@ -566,16 +587,28 @@ PERMS.forEach(p=>{
   row.querySelector('input').onchange=e=>{tick();e.target.checked?state.perms.add(p.key):state.perms.delete(p.key);};
 });
 
-function mergedSkills(kind){const m=new Map();[...state.roles].forEach(k=>ROLES[k][kind].forEach(s=>{if(!m.has(s.id))m.set(s.id,s);}));return [...m.values()];}
+function tryList(){const m=new Map();UNIVERSAL.forEach(s=>m.set(s.id,s));[...state.roles].forEach(k=>ROLES[k].picks.forEach(s=>{if(!m.has(s.id))m.set(s.id,s);}));return [...m.values()];}
+function mergedOwn(){const m=new Map();[...state.roles].forEach(k=>ROLES[k].own.forEach(s=>{if(!m.has(s.id))m.set(s.id,Object.assign({},s));else if(s.rec)m.get(s.id).rec=true;}));return [...m.values()];}
 function mergedDocs(){const m=new Map();[...state.roles].forEach(k=>ROLES[k].docs.forEach(d=>{if(!m.has(d.id))m.set(d.id,d);}));return [...m.values()];}
 
+/* ===== AI秘書スキルパック（pack/ は sync-pack.sh が正本リポから同期する配布物。目録は pack/manifest.json） ===== */
+let PACK=null,PACK_ERR=false,packPromise=null,packOpen=false;
+function ensurePack(){
+  if(PACK)return Promise.resolve(PACK);
+  if(!packPromise)packPromise=fetch('pack/manifest.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('manifest');return r.json();})
+    .then(function(m){PACK=m;PACK_ERR=false;document.querySelectorAll('[data-pack="count"]').forEach(function(e){e.textContent=m.skills.length;});return m;})
+    .catch(function(e){packPromise=null;PACK_ERR=true;throw e;});
+  return packPromise;
+}
+function packSkill(name){return PACK?PACK.skills.find(function(s){return s.name===name;}):null;}
+
 function applyRoleDefaults(){
-  const ts=new Set(),dc=new Set();state.teams=new Set();
+  const ow=new Set(),dc=new Set();state.teams=new Set();
   [...state.roles].forEach(k=>{const r=ROLES[k];
-    r.tetsuban.forEach(s=>ts.add(s.id));
+    r.own.filter(s=>s.rec).forEach(s=>ow.add(s.id));
     r.docs.filter(d=>d.on).forEach(d=>dc.add(d.id));
     state.teams.add(k);});
-  state.tetsuban=ts;state.next=new Set();state.docs=dc;
+  state.own=ow;state.docs=dc;
   renderStep2();renderStep3();saveState();
 }
 function skillRow(s,checked,tag){
@@ -585,14 +618,29 @@ function skillRow(s,checked,tag){
 function renderStep2(){
   const box=document.getElementById('step2body');
   if(!hasRole()){box.innerHTML='<p class="hint">先に①で役割を選んでください（複数OK・「その他」自由入力も可）。</p>';return;}
-  let h='<div class="group-title">universal（全員の土台・固定）</div>';
-  UNIVERSAL.forEach(s=>h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">'+s.id+'</span><div class="desc">'+s.desc+'</div></div></div>');
+  const tries=tryList(),tryIds=new Set(tries.map(s=>s.id));
+  let h='<div class="group-title">まず試す（全員の土台'+(state.roles.size?'＋'+esc(rnames().join('・'))+'のおすすめ':'')+'・この順で1本ずつ）</div>';
+  tries.forEach((s,i)=>{const p=packSkill(s.id);
+    h+='<div class="row fixed"><span class="num pixel">'+(i+1)+'</span><div class="meta"><span class="id">/'+s.id+'</span><div class="desc">'+esc(s.desc)+'</div>'+
+      (p?'<div class="ask">こう頼む：'+esc(p.ask)+'</div>':'')+'</div></div>';});
+  h+='<div class="group-title">AI秘書スキルパック（全部まとめて入ります）</div>';
+  if(PACK){
+    h+='<details class="packbox"'+(packOpen?' open':'')+'><summary>📦 v'+esc(PACK.version)+'：スキル'+PACK.skills.length+'本＋'+esc(PACK.agents.map(a=>a.label).join('・'))+'</summary><div class="pack-list">';
+    PACK.skills.forEach(s=>{h+='<div class="row fixed"><div class="meta"><span class="id"><span class="pack-scene">'+esc(s.scene)+'</span>/'+esc(s.name)+
+      (tryIds.has(s.name)?'<span class="tag try">まず試す</span>':'')+'</span><div class="desc">'+esc(s.what)+'</div><div class="ask">こう頼む：'+esc(s.ask)+'</div></div></div>';});
+    PACK.agents.forEach(a=>{h+='<div class="row fixed"><div class="meta"><span class="id"><span class="pack-scene">調査</span>'+esc(a.label)+'</span><div class="desc">'+esc(a.what)+'</div></div></div>';});
+    h+='</div></details>';
+  }else if(PACK_ERR){
+    h+='<p class="hint">スキルパックの一覧を読み込めませんでした。公開URLから開いているか確かめて、ページを再読み込みしてください。</p>';
+  }else{
+    h+='<p class="hint">スキルパックの一覧を読み込み中…</p>';
+  }
   if(state.roles.size){
-    h+='<div class="group-title">鉄板スキル（'+rnames().join('・')+'のおすすめ・ON）</div>';
-    mergedSkills('tetsuban').forEach(s=>h+=skillRow(s,state.tetsuban.has(s.id),'鉄板'));
-    h+='<div class="group-title">次に足す（慣れたら）</div>';
-    var tIds=new Set(mergedSkills('tetsuban').map(s=>s.id));
-    mergedSkills('next').filter(s=>!tIds.has(s.id)).forEach(s=>h+=skillRow(s,state.next.has(s.id),null));
+    const own=mergedOwn();
+    if(own.length){
+      h+='<div class="group-title">自作で足す（パックに無い仕事・慣れたら）</div>';
+      own.forEach(s=>h+=skillRow(s,state.own.has(s.id),s.rec?'おすすめ':null));
+    }
     h+='<div class="group-title">役割の Agent Team（役割ごと）</div>';
     [...state.roles].forEach(k=>{const r=ROLES[k];
       h+='<div class="row"><input type="checkbox" '+(state.teams.has(k)?'checked':'')+' data-team="'+k+'"><div class="meta">'+
@@ -600,12 +648,12 @@ function renderStep2(){
   }
   if(otherName()){
     h+='<div class="group-title">その他の役割</div>';
-    h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">「'+esc(otherName())+'」</span><div class="desc">専用カタログが無いので、universal から始めて会話で鉄板スキルを足していきます</div></div></div>';
+    h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">「'+esc(otherName())+'」</span><div class="desc">専用カタログが無いので、まず全員の土台2本から試し、会話で自作スキルを決めていきます</div></div></div>';
   }
   box.innerHTML=h;
+  const pb=box.querySelector('.packbox');if(pb)pb.ontoggle=()=>{packOpen=pb.open;};
   box.querySelectorAll('[data-skill]').forEach(cb=>cb.onchange=e=>{tick();
-    const id=e.target.dataset.skill;const inT=mergedSkills('tetsuban').some(s=>s.id===id);
-    const set=inT?state.tetsuban:state.next;e.target.checked?set.add(id):set.delete(id);});
+    const id=e.target.dataset.skill;e.target.checked?state.own.add(id):state.own.delete(id);});
   box.querySelectorAll('[data-team]').forEach(cb=>cb.onchange=e=>{tick();const k=e.target.dataset.team;e.target.checked?state.teams.add(k):state.teams.delete(k);});
 }
 function renderStep3(){
@@ -618,7 +666,7 @@ function renderStep3(){
   h+='<div class="group-title">仕上げ</div>';
   h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">自社理解度スコアを出す</span><div class="desc">埋まり具合を採点し、次に足すと効く資料を提案</div></div></div>';
   const ctxRef=state.roles.size?'role-contexts/'+rnames().join('・')+' を参照':'役割カタログは未整備（その他のみ）';
-  h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">'+esc(ctxRef)+'</span><div class="desc">選んだ役割の鉄板・注意を踏まえて下書き'+(otherName()?'（その他「'+esc(otherName())+'」は会話で詰める）':'')+'</div></div></div>';
+  h+='<div class="row fixed"><input type="checkbox" checked disabled><div class="meta"><span class="id">'+esc(ctxRef)+'</span><div class="desc">選んだ役割のおすすめ・注意を踏まえて下書き'+(otherName()?'（その他「'+esc(otherName())+'」は会話で詰める）':'')+'</div></div></div>';
   box.innerHTML=h;
   box.querySelectorAll('[data-doc]').forEach(cb=>cb.onchange=e=>{tick();const id=e.target.dataset.doc;e.target.checked?state.docs.add(id):state.docs.delete(id);});
 }
@@ -632,7 +680,7 @@ function go(n){
 function list(set){return [...set].join('、')||'（なし）';}
 function toolsAll(){const a=[...state.tools,...state.toolsFree];return a.length?a.join('、'):'（なし）';}
 function permLine(){const base='破壊系コマンド・機密ファイル読取を deny（固定）';const sel=PERMS.filter(p=>state.perms.has(p.key)).map(p=>p.id);return base+(sel.length?'／'+sel.join('／'):'');}
-function teamLine(){const ts=[...state.teams].map(k=>ROLES[k].team.name+'（'+ROLES[k].team.flow+'）');return ts.length?ts.join(' / '):'今回は作らない（単発エージェント1〜2個から）';}
+function teamLine(){const ts=[...state.teams].map(k=>ROLES[k].team.name+'（'+ROLES[k].team.flow+'）');return ts.length?ts.join(' / '):'今回は作らない（まずスキルパックの調査係から）';}
 function buildP1(){
   const company=state.company.trim();
   const person=state.person.trim();
@@ -651,12 +699,15 @@ function buildP1(){
   '→ ここまでで「おはよう」→ /daily-schedule が動く"ガワ"が完成します。';
 }
 function buildP2(){
-  const other=otherName()?'\n- その他の役割「'+otherName()+'」：専用テンプレ無し。universal＋会話で鉄板スキルを決める':'';
-  return '【第2部 能力：スキル＆エージェント】このファイル（第2部）の手順で、以下を作ってください。応答は日本語で。\n'+
-  '- 対象役割：'+allRoleNames().join('・')+'\n- universal（全員）：/daily-schedule、/mtg-prep\n'+
-  '- 鉄板スキル：'+list(state.tetsuban)+'\n- 次に足す：'+list(state.next)+'\n'+
+  const other=otherName()?'\n- その他の役割「'+otherName()+'」：専用テンプレ無し。まず全員の土台2本から試し、会話で自作スキルを決める':'';
+  const pack=PACK?'v'+PACK.version+'（スキル'+PACK.skills.length+'本＋'+PACK.agents.map(a=>a.label).join('・')+'）':'（同梱）';
+  return '【第2部 能力：スキル＆エージェント】このファイル（第2部）の手順で進めてください。応答は必ず日本語で。\n'+
+  '- 同梱のAI秘書スキルパック：'+pack+'。このファイルと同じフォルダにある skills/ と agents/ を、Step 6-1 の手順で .claude/ に入れる\n'+
+  '- 対象役割：'+allRoleNames().join('・')+'\n'+
+  '- まず試す（この順で1本ずつ）：'+tryList().map(s=>'/'+s.id).join(' → ')+'\n'+
+  '- 自作で足す（パックに無い）：'+list(state.own)+'\n'+
   '- Agent Team：'+teamLine()+other+'\n'+
-  '- 各スキルに Gotchas 枠を入れ、description で自動起動する形に';
+  '- 自作スキルには Gotchas 枠を入れ、description で自動起動する形に';
 }
 function buildP3(){
   const cats=rnames();
@@ -670,22 +721,28 @@ function buildP3(){
 }
 const TEACHER={
   1:'<b>このあと講師が概念を説明します。</b>いま立ち上げた「動くAI秘書」を題材に、CLAUDE.md・スキル・コンテキストが何なのかを解説します。実物を動かしたあとなので、すっと腹落ちするはずです。聞き終わったら ② 能力 に進みましょう。',
-  2:'<b>このあと講師が概念を説明します。</b>いま作ったスキルと Agent Team を題材に、スキル（スラッシュコマンド）が description でどう自動起動するか・なぜ Gotchas を書くか・いつチームに任せるかを解説します。自分の役割の鉄板を動かしたあとなので腹落ちしやすいはずです。聞き終わったら ③ 中身 に進みましょう。',
+  2:'<b>このあと講師が概念を説明します。</b>いま入れたスキルパックと Agent Team を題材に、スキルが description でどう自動で選ばれるか・なぜ Gotchas を書くか・パックに無い仕事をどう自作するか・いつ調査係やチームに任せるかを解説します。自分の役割のおすすめを動かしたあとなので腹落ちしやすいはずです。聞き終わったら ③ 中身 に進みましょう。',
   3:'<b>このあと講師が概念を説明します。</b>いま入れたコンテキスト（context/）を題材に、なぜ自社の事実を持たせると回答が変わるか・ストック（事実）とフロー（ログ）の分け方・使うほど賢くなる仕組みを解説します。「自社が分かる」状態を見たあとなので腹落ちしやすいはずです。聞き終わったら右下の「次へ」で完成画面へ進みましょう。'
 };
 const LEARN={
   1:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>CLAUDE.md</b> はAIの就業規則。事業概要・絶対ルール（日本語で答える／送信前に下書き／機密厳守）を書くと、AIは毎回それに従って動きます。<b>スキル</b>は「よく使う作業」のショートカット（例：<code>/daily-schedule</code> で朝の工程表）。<b>コンテキスト（context/）</b>は自社の事実の置き場。この3つで「自社が分かるAI秘書」になります。</div></details>',
-  2:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>スキル</b>は「/名前」で呼ぶショートカット。frontmatter の description に「どんな時に使うか」を書くと、その場面で自動的に立ち上がります。<b>Gotchas</b> は過去の失敗を1行で残すメモ（同じミスを防ぐ）。<b>Agent Team</b> は重い仕事を複数AIで分担する編成（例：提案書を リサーチ→競合→設計→執筆→レビュー）。まずは単発スキルから、慣れたらチーム。</div></details>',
+  2:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>スキル</b>は「よく使う作業」の手順書。AI秘書スキルパックには、工程表・返信の下書き・会議の準備・議事録・日報などのスキルが入っていて、「今日の工程表をつくって」のように話しかけるだけで合うスキルが動きます（名前で呼ぶなら <code>/daily-schedule</code>）。各スキルの description に「どんな時に使うか」が書いてあるので、AIが場面に合うものを選べるのです。<b>Gotchas</b> は過去の失敗を1行で残すメモ（同じミスを防ぐ）。<b>調査係</b>や <b>Agent Team</b> は、重い仕事を別のAIに任せる編成（例：提案書を リサーチ→競合→設計→執筆→レビュー で分担）。まずパックを使い込み、パックに無い自社の仕事だけを自作で足します。</div></details>',
   3:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>context/</b> は自社の事実を入れる場所。ここが埋まるほど、一般論でなく「自社を分かった」回答になります。コツは <b>ストック</b>（今の正しい状態・上書きで最新に）と <b>フロー</b>（議事録やログ・追記でためる）を分けること。最初は事業概要・主要顧客・よく使う書式から。使うほど事実が増えて賢くなります。</div></details>'
 };
+const PART2_ASK='ダウンロードした「第2部_能力_セット.zip」を展開して、中の part2-setup.md の手順で第2部を進めて';
+function dlText(n,again){return (again?'⬇ もう一度DL':'⬇ 第'+n+'部セットをDL')+(n===2?'（手順＋決定＋スキルパック・zip）':'（手順＋決定）');}
 function impl(n,silent){
   if(!hasRole()){if(silent)return;alert('先に①で役割を選んでください。');return;}
-  var dlLabel=downloaded.has(n)?'⬇ もう一度DL（手順＋決定）':'⬇ 第'+n+'部セットをDL（手順＋決定）';
+  const lead=n===2
+    ?'「手順（構築指示書）＋あなたの決定」と「AI秘書スキルパック」が1つのzipにまとまっています。DLしたら、下の文を Claude Code に貼って頼めばOK。'
+    :'「手順（構築指示書）＋あなたの決定」が1つのファイルにまとまっています。Claude Code を開いて、このファイルを渡せばOK。';
   let html='<div class="result-block"><div class="rb-h"><span class="badge pixel">第'+n+'部</span>セットができました！DLして Claude Code に渡すだけ</div>'+
-    '<p class="hint" style="margin:0 0 10px">「手順（構築指示書）＋あなたの決定」が1つのファイルにまとまっています。Claude Code を開いて、このファイルを渡せばOK。</p>'+
+    '<p class="hint" style="margin:0 0 10px">'+lead+'</p>'+
     '<div class="guidebar">'+
-    '<button class="gbtn dl" onclick="downloadBundle('+n+',this)">'+dlLabel+'</button>'+
-    '</div></div>';
+    '<button class="gbtn dl" onclick="downloadBundle('+n+',this)">'+dlText(n,downloaded.has(n))+'</button>'+
+    '</div>'+
+    (n===2?'<div class="askbox">Claude Code にこう頼む<span class="askq">'+esc(PART2_ASK)+'</span><button onclick="copyAsk(this)">📋 コピー</button></div>':'')+
+    '</div>';
   if(TEACHER[n]){
     html+='<div class="teacher">'+TEACHER[n]+(LEARN[n]||'')+'</div>';
   }
@@ -709,15 +766,66 @@ const GUIDE_FILES={1:'guide/01_第1部_ガワ_CLAUDEmd構築.md',2:'guide/02_第
 const PART_NAMES={1:'第1部_ガワ',2:'第2部_能力',3:'第3部_中身'};
 async function downloadBundle(n,btn){
   dlSfx(); hop();
-  const prompt = n===1?buildP1():n===2?buildP2():buildP3();
-  let guide='';
-  try{const res=await fetch(GUIDE_FILES[n]);guide=await res.text();}catch(e){guide='（手順ファイル未読込：ホストして同梱してください）';}
-  const body='<!-- あなたの決定（ウィザード生成）-->\n'+prompt+'\n\n---\n\n<!-- 第'+n+'部 手順（構築指示書・同梱）-->\n'+guide;
-  const blob=new Blob([body],{type:'text/markdown;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=PART_NAMES[n]+'_セット.md';
+  let blob,fname;
+  if(n===2){
+    if(btn)btn.textContent='⏳ スキルパックをまとめています…';
+    try{await ensurePack();blob=await buildPart2Zip(await bundleText(2));}
+    catch(e){alert('スキルパックを読み込めませんでした。通信状況を確かめて、もう一度DLしてください。');if(btn)btn.textContent=dlText(2,downloaded.has(2));return;}
+    fname=PART_NAMES[2]+'_セット.zip';
+  }else{
+    blob=new Blob([await bundleText(n)],{type:'text/markdown;charset=utf-8'});fname=PART_NAMES[n]+'_セット.md';
+  }
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;
   document.body.appendChild(a);a.click();a.remove();
   downloaded.add(n);markDL(n);saveState();
-  if(btn){btn.textContent='✓ DLしました';setTimeout(function(){btn.textContent='⬇ もう一度DL（手順＋決定）';},1600);}
+  if(btn){btn.textContent='✓ DLしました';setTimeout(function(){btn.textContent=dlText(n,true);},1600);}
+}
+async function bundleText(n){
+  const prompt = n===1?buildP1():n===2?buildP2():buildP3();
+  let guide='';
+  try{const res=await fetch(GUIDE_FILES[n]);if(!res.ok)throw new Error(res.status);guide=await res.text();}catch(e){guide='（手順ファイル未読込：ホストして同梱してください）';}
+  return '<!-- あなたの決定（ウィザード生成）-->\n'+prompt+'\n\n---\n\n<!-- 第'+n+'部 手順（構築指示書・同梱）-->\n'+guide;
+}
+function copyAsk(btn){
+  const done=function(){btn.textContent='✓ コピーしました';setTimeout(function(){btn.textContent='📋 コピー';},1500);};
+  const fallback=function(){const ta=document.createElement('textarea');ta.value=PART2_ASK;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(PART2_ASK).then(done,fallback);}else{fallback();}
+}
+/* ===== 第2部セット（zip）: 手順書＋スキルパックを1ファイルにまとめる。外部ライブラリなし・無圧縮・ファイル名はUTF-8 ===== */
+const ZIP_ROOT='ai-secretary-part2/';
+async function buildPart2Zip(md){
+  const enc=new TextEncoder();
+  const files=[{name:ZIP_ROOT+'part2-setup.md',data:enc.encode(md)}];
+  const datas=await Promise.all(PACK.files.map(function(p){return fetch('pack/'+p,{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error(p);return r.arrayBuffer();});}));
+  PACK.files.forEach(function(p,i){files.push({name:ZIP_ROOT+p,data:new Uint8Array(datas[i])});});
+  return makeZip(files);
+}
+const CRC_TABLE=(function(){const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC_TABLE[(c^b[i])&0xFF]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function makeZip(files){
+  const enc=new TextEncoder(),parts=[],central=[];let offset=0;
+  const d=new Date(),time=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),date=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  files.forEach(function(f){
+    const name=enc.encode(f.name),data=f.data,crc=crc32(data);
+    const lh=new DataView(new ArrayBuffer(30));
+    lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,0,true);
+    lh.setUint16(10,time,true);lh.setUint16(12,date,true);lh.setUint32(14,crc,true);
+    lh.setUint32(18,data.length,true);lh.setUint32(22,data.length,true);lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
+    parts.push(new Uint8Array(lh.buffer),name,data);
+    const ch=new DataView(new ArrayBuffer(46));
+    ch.setUint32(0,0x02014b50,true);ch.setUint16(4,0x0314,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,0,true);
+    ch.setUint16(12,time,true);ch.setUint16(14,date,true);ch.setUint32(16,crc,true);
+    ch.setUint32(20,data.length,true);ch.setUint32(24,data.length,true);ch.setUint16(28,name.length,true);
+    ch.setUint16(30,0,true);ch.setUint16(32,0,true);ch.setUint16(34,0,true);ch.setUint16(36,0,true);
+    ch.setUint32(38,(0o100644<<16)>>>0,true);ch.setUint32(42,offset,true);
+    central.push(new Uint8Array(ch.buffer),name);
+    offset+=30+name.length+data.length;
+  });
+  const cdSize=central.reduce(function(s,p){return s+p.length;},0);
+  const end=new DataView(new ArrayBuffer(22));
+  end.setUint32(0,0x06054b50,true);end.setUint16(4,0,true);end.setUint16(6,0,true);
+  end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);end.setUint16(20,0,true);
+  return new Blob(parts.concat(central,[new Uint8Array(end.buffer)]),{type:'application/zip'});
 }
 function confetti(){const cols=['#1e5ff2','#ffd23f','#3ec46d','#ff6b6b','#9fc0ff','#673AB7'];
   for(let i=0;i<30;i++){const s=document.createElement('div');s.className='confetti';
@@ -740,7 +848,7 @@ function showClear(){
     +'<p class="clear-sub">'+person+'（'+company+'）専用 ／ 役割：'+roles+'</p></div>';
   h+='<div class="clear-recap"><div class="oh">作ったもの</div><ul>'
     +'<li><b>① ガワ</b>：CLAUDE.md・置き場・権限の土台</li>'
-    +'<li><b>② 能力</b>：universal＋役割の鉄板スキル・Agent Team</li>'
+    +'<li><b>② 能力</b>：AI秘書スキルパック（スキル＋調査係）・自作スキル・Agent Team</li>'
     +'<li><b>③ 中身</b>：context/ に自社の事実</li></ul></div>';
   h+='<div class="clear-dl"><div class="oh">これで完成です</div>①②③はその場で構築済み。あとは Claude Code で「おはよう」と話しかければ、AI秘書'+nm+'が今日からあなたの仕事を手伝います。</div>';
   h+='<div class="nav"><button onclick="go(1)">◀ もどって見直す</button><button onclick="askReset()">↺ もう一度はじめから</button></div>';
@@ -785,6 +893,7 @@ document.querySelectorAll('.steps .s').forEach(function(s){s.onclick=function(){
 document.addEventListener('input',saveState);document.addEventListener('change',saveState);
 loadState();
 renderStep2();renderStep3();
+ensurePack().then(renderStep2,renderStep2);
 </script>
 </body>
 </html>
