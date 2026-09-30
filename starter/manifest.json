@@ -1,0 +1,74 @@
+{
+  "name": "ai-secretary-starter",
+  "version": "1.0.0",
+  "zip_name": "ai-secretary.zip",
+  "files": [
+    {
+      "src": "CLAUDE.starter.md",
+      "dst": "CLAUDE.md"
+    },
+    {
+      "src": "README.md",
+      "dst": "README.md"
+    },
+    {
+      "src": "context/README.md",
+      "dst": "context/README.md"
+    },
+    {
+      "src": "context/company/decisions.md",
+      "dst": "context/company/decisions.md"
+    },
+    {
+      "src": "context/company/overview.md",
+      "dst": "context/company/overview.md"
+    },
+    {
+      "src": "context/company/sources/README.md",
+      "dst": "context/company/sources/README.md"
+    },
+    {
+      "src": "context/owner/profile.md",
+      "dst": "context/owner/profile.md"
+    },
+    {
+      "src": "dot-claude/settings.json",
+      "dst": ".claude/settings.json"
+    },
+    {
+      "src": "dot-claude/rules/basics.md",
+      "dst": ".claude/rules/basics.md"
+    },
+    {
+      "src": "dot-claude/rules/output-files.md",
+      "dst": ".claude/rules/output-files.md"
+    },
+    {
+      "src": "dot-claude/rules/security.md",
+      "dst": ".claude/rules/security.md"
+    },
+    {
+      "src": "dot-claude/skills/setup/SKILL.md",
+      "dst": ".claude/skills/setup/SKILL.md"
+    },
+    {
+      "src": "dot-claude/skills/setup/references/first-steps.md",
+      "dst": ".claude/skills/setup/references/first-steps.md"
+    },
+    {
+      "src": "work/README.md",
+      "dst": "work/README.md"
+    }
+  ],
+  "dirs": [
+    "context/clients",
+    "context/members",
+    "work/daily",
+    "work/weekly",
+    "work/mtg"
+  ],
+  "skills_table": {
+    "file": "README.md",
+    "placeholder": "<!-- SKILLS_TABLE -->"
+  }
+}
