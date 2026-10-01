@@ -513,7 +513,7 @@ const TOOLS=[
   {id:"X（旧Twitter）",on:false},{id:"音声通知（VOICEVOX 等）",on:false}
 ];
 const PERMS=[
-  {key:'send_draft',id:'外部送信（メール・Slack）は下書き→許可制',desc:'AIは下書きまで。送信は人が確認して実行',rec:true,on:true},
+  {key:'send_draft',id:'外部送信（メール・チャット）はAIが下書きまで・送信は本人',desc:'AIは下書き・文面づくりまで。送信・投稿は本人が行う',rec:true,on:true},
   {key:'autocommit',id:'ファイル編集後にタスク完了で自動コミット',desc:'作業の記録が残り、いつでも前の状態に戻せる',rec:true,on:true},
   {key:'read_auto',id:'読み取り系コマンド（ls / grep / cat 等）は自動許可',desc:'毎回の確認を減らしてサクサク動く',rec:true,on:true},
   {key:'guard_secret',id:'機密フォルダ（owner・finance 等）への書き込みは毎回確認',desc:'重要ファイルのうっかり上書きを防ぐ',rec:true,on:true},
@@ -714,7 +714,7 @@ function buildP1(){
   const claudeMdName=an?'CLAUDE.md冒頭に「'+an+'」という名前のAI秘書として'+who+'を補佐する旨を明記':'CLAUDE.md冒頭に、'+who+'を補佐するAI秘書である旨を明記（名前は任意。付けたい場合のみ命名）';
   return '【第1部 ガワ：CLAUDE.mdと土台】このファイル（第1部）の手順で進めてください。応答は必ず日本語で。\n'+
   '- 会社名：'+companyLine+'\n- あなた（ユーザー）：'+personLine+'\n- AI秘書の呼び名：'+nameLine+'\n- 役割：'+allRoleNames().join('・')+'\n'+
-  '- フォルダ構造と CLAUDE.md を作成（'+claudeMdName+'。絶対ルール#1=日本語応答、対外送信は下書き→許可、機密厳守を含める）\n'+
+  '- フォルダ構造と CLAUDE.md を作成（'+claudeMdName+'。絶対ルール#1=日本語応答、対外送信はAIが下書きまで・送信は本人、機密厳守を含める）\n'+
   '- 繋ぐツール：'+toolsAll()+'（コネクタ→CLI→MCPの順）\n'+
   '- 権限：'+permLine()+'\n'+
   '- セキュリティの最低限（共通付録）を確認してから外部ツール接続へ\n'+
@@ -747,7 +747,7 @@ const TEACHER={
   3:'<b>このあと講師が概念を説明します。</b>いま入れたコンテキスト（context/）を題材に、なぜ自社の事実を持たせると回答が変わるか・ストック（事実）とフロー（ログ）の分け方・使うほど賢くなる仕組みを解説します。「自社が分かる」状態を見たあとなので腹落ちしやすいはずです。聞き終わったら右下の「次へ」で完成画面へ進みましょう。'
 };
 const LEARN={
-  1:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>CLAUDE.md</b> はAIの就業規則。事業概要・絶対ルール（日本語で答える／送信前に下書き／機密厳守）を書くと、AIは毎回それに従って動きます。<b>スキル</b>は「よく使う作業」のショートカット（例：<code>/daily-schedule</code> で朝の工程表）。<b>コンテキスト（context/）</b>は自社の事実の置き場。この3つで「自社が分かるAI秘書」になります。</div></details>',
+  1:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>CLAUDE.md</b> はAIの就業規則。事業概要・絶対ルール（日本語で答える／メール・チャットはAIが下書きまで・送信は本人／機密厳守）を書くと、AIは毎回それに従って動きます。<b>スキル</b>は「よく使う作業」のショートカット（例：<code>/daily-schedule</code> で朝の工程表）。<b>コンテキスト（context/）</b>は自社の事実の置き場。この3つで「自社が分かるAI秘書」になります。</div></details>',
   2:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>スキル</b>は「よく使う作業」の手順書。AI秘書スキルパックには、工程表・返信の下書き・会議の準備・議事録・日報などのスキルが入っていて、「今日の工程表をつくって」のように話しかけるだけで合うスキルが動きます（名前で呼ぶなら <code>/daily-schedule</code>）。各スキルの description に「どんな時に使うか」が書いてあるので、AIが場面に合うものを選べるのです。<b>Gotchas</b> は過去の失敗を1行で残すメモ（同じミスを防ぐ）。<b>調査係</b>や <b>Agent Team</b> は、重い仕事を別のAIに任せる編成（例：提案書を リサーチ→競合→設計→執筆→レビュー で分担）。まずパックを使い込み、パックに無い自社の仕事だけを自作で足します。</div></details>',
   3:'<details class="learn"><summary>▼ 自分で読む（90秒・講師がいなくてもOK）</summary><div class="learn-body"><b>context/</b> は自社の事実を入れる場所。ここが埋まるほど、一般論でなく「自社を分かった」回答になります。コツは <b>ストック</b>（今の正しい状態・上書きで最新に）と <b>フロー</b>（議事録やログ・追記でためる）を分けること。最初は事業概要・主要顧客・よく使う書式から。使うほど事実が増えて賢くなります。</div></details>'
 };
