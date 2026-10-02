@@ -1,7 +1,7 @@
 {
   "name": "ai-secretary",
-  "version": "0.2.2",
-  "source": "DAIJOBU-INC/ai-secretary-skills@0ffff8a",
+  "version": "0.2.4",
+  "source": "DAIJOBU-INC/ai-secretary-skills@c60380d",
   "skills": [
     {
       "scene": "朝",
